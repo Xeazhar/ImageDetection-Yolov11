@@ -1,5 +1,3 @@
-#THIS IS FOR CLASSIFICATION
-
 import os
 import cv2
 import glob
@@ -21,7 +19,6 @@ DATASETS = [
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Potholes - Annotated',
         'potholes'
     ),
-
     (
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Cracks - Annotated/12 - Cracks',
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Cracks - Annotated',
@@ -29,14 +26,12 @@ DATASETS = [
     )
 ]
 
-# Create folder structure: split/class/images and split/class/labels
+# Create folder structure: split/images and split/labels for combined output
 for split in SPLIT_RATIOS:
-    for _, _, class_name in DATASETS:
-        os.makedirs(os.path.join(OUTPUT_ROOT, split, class_name, 'images'), exist_ok=True)
-        os.makedirs(os.path.join(OUTPUT_ROOT, split, class_name, 'labels'), exist_ok=True)
+    os.makedirs(os.path.join(OUTPUT_ROOT, split, 'images'), exist_ok=True)
+    os.makedirs(os.path.join(OUTPUT_ROOT, split, 'labels'), exist_ok=True)
 
 # Helper functions
-
 def read_yolo_labels(path):
     bboxes, classes = [], []
     if os.path.exists(path):
@@ -82,12 +77,12 @@ for img_dir, lbl_dir, class_name in DATASETS:
             if img is None:
                 continue
             img_res = cv2.resize(img, TARGET_SIZE)
-            # Save processed image
-            dst_img = os.path.join(OUTPUT_ROOT, split, class_name, 'images', f"{fname}.jpg")
+            # Save processed image to combined split
+            dst_img = os.path.join(OUTPUT_ROOT, split, 'images', f"{fname}.jpg")
             cv2.imwrite(dst_img, img_res)
             # Copy label
             bboxes, classes = read_yolo_labels(lbl_path)
-            dst_lbl = os.path.join(OUTPUT_ROOT, split, class_name, 'labels', f"{fname}.txt")
+            dst_lbl = os.path.join(OUTPUT_ROOT, split, 'labels', f"{fname}.txt")
             write_yolo_labels(dst_lbl, bboxes, classes)
 
 # Augmentation for training split (with debug logs)
@@ -99,7 +94,7 @@ transform = A.Compose([
     A.Rotate(limit=15, border_mode=cv2.BORDER_REFLECT_101, p=0.5),
     A.Perspective(scale=(0.05, 0.1), keep_size=True, p=0.5),
     A.GridDistortion(num_steps=5, distort_limit=0.1, p=0.3),
-        A.CoarseDropout(p=0.3),  # using default parameters for coarse dropout
+    A.CoarseDropout(p=0.3),  # using default parameters for coarse dropout
     A.CLAHE(clip_limit=4.0, tile_grid_size=(8,8), p=0.3),
     A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=0.5),
     A.HueSaturationValue(hue_shift_limit=16, sat_shift_limit=25, val_shift_limit=15, p=0.5),
@@ -112,32 +107,31 @@ transform = A.Compose([
     A.CoarseDropout(p=0.3)
 ], bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels'], min_visibility=0.3))
 
-for _, _, class_name in DATASETS:
-    print(f"Starting augmentation for class: {class_name}")
-    train_folder = os.path.join(OUTPUT_ROOT, 'train', class_name, 'images')
-    label_folder = os.path.join(OUTPUT_ROOT, 'train', class_name, 'labels')
-    train_imgs = glob.glob(os.path.join(train_folder, '*.jpg'))
-    print(f"Found {len(train_imgs)} images for augmenting in {train_folder}")
-    total_aug = 0
-    for img_path in train_imgs:
-        fname = os.path.splitext(os.path.basename(img_path))[0]
-        print(f"Processing image: {fname}")
-        img = cv2.imread(img_path)
-        lbl_path = os.path.join(label_folder, f"{fname}.txt")
-        bboxes, classes = read_yolo_labels(lbl_path)
-        print(f"  Loaded {len(bboxes)} bboxes from {lbl_path}")
-        if not bboxes:
-            print(f"  Skipping {fname}: no bounding boxes")
-            continue
-        for i in range(1, NUM_AUG_PER_IMAGE+1):
-            try:
-                aug = transform(image=img, bboxes=bboxes, class_labels=classes)
-                out_img = os.path.join(train_folder, f"{fname}_aug{i}.jpg")
-                out_lbl = os.path.join(label_folder, f"{fname}_aug{i}.txt")
-                cv2.imwrite(out_img, aug['image'])
-                write_yolo_labels(out_lbl, aug['bboxes'], aug['class_labels'])
-                total_aug += 1
-                print(f"  Saved augmentation {i} for {fname}: {out_img} ({len(aug['bboxes'])} bboxes)")
-            except Exception as e:
-                print(f"  Error augmenting {fname} aug{i}: {e}")
-    print(f"Completed augmentations for {class_name}: {total_aug} files created")
+# Process augmentation for 'train' split
+train_folder = os.path.join(OUTPUT_ROOT, 'train', 'images')
+label_folder = os.path.join(OUTPUT_ROOT, 'train', 'labels')
+train_imgs = glob.glob(os.path.join(train_folder, '*.jpg'))
+print(f"Found {len(train_imgs)} images for augmenting in {train_folder}")
+total_aug = 0
+for img_path in train_imgs:
+    fname = os.path.splitext(os.path.basename(img_path))[0]
+    print(f"Processing image: {fname}")
+    img = cv2.imread(img_path)
+    lbl_path = os.path.join(label_folder, f"{fname}.txt")
+    bboxes, classes = read_yolo_labels(lbl_path)
+    print(f"  Loaded {len(bboxes)} bboxes from {lbl_path}")
+    if not bboxes:
+        print(f"  Skipping {fname}: no bounding boxes")
+        continue
+    for i in range(1, NUM_AUG_PER_IMAGE+1):
+        try:
+            aug = transform(image=img, bboxes=bboxes, class_labels=classes)
+            out_img = os.path.join(train_folder, f"{fname}_aug{i}.jpg")
+            out_lbl = os.path.join(label_folder, f"{fname}_aug{i}.txt")
+            cv2.imwrite(out_img, aug['image'])
+            write_yolo_labels(out_lbl, aug['bboxes'], aug['class_labels'])
+            total_aug += 1
+            print(f"  Saved augmentation {i} for {fname}: {out_img} ({len(aug['bboxes'])} bboxes)")
+        except Exception as e:
+            print(f"  Error augmenting {fname} aug{i}: {e}")
+print(f"Completed augmentations for training data: {total_aug} files created")
