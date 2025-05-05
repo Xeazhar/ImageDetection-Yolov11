@@ -5,4 +5,4 @@ test: test/images
 
 names:
   0: potholes
-  1.0: crack_issues
+  1: crack_issues
