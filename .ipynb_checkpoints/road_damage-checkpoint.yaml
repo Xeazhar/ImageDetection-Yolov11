@@ -1,0 +1,8 @@
+path: C:/Users/jazzb/ImageDetection-Yolov9/Road_Damage  # adjust if path differs
+train: train/images
+val: val/images
+test: test/images
+
+names:
+  0: potholes
+  1.0: crack_issues
