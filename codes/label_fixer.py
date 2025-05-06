@@ -2,12 +2,12 @@ import os
 
 # Define the old class IDs and new class IDs for potholes
 old_to_new_class_mapping = {
-    1.0: 1,  # Convert class ID 1.0 to 1
+    4: 5,  # Convert class ID 1.0 to 1
 
 }
 
 # Define the path to your potholes dataset's labels
-root_path = r'C:\Users\jazzb\ImageDetection-Yolov9\annotated\Cracks - Annotated'
+root_path = r'C:\Users\jazzb\ImageDetection-Yolov9\annotated\Open Manhole - Annotated'
 
 # Process all .txt files directly in the potholes folder (without any subfolders)
 if os.path.exists(root_path):

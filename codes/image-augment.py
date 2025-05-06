@@ -16,16 +16,35 @@ OUTPUT_ROOT = './Road_Damage'
 
 # Each tuple: (image_dir, label_dir, class_name)
 DATASETS = [
-    (
+  (
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Potholes - Annotated/1 - Potholes-20250429T144329Z-001/1 - Potholes',
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Potholes - Annotated',
         'potholes'
     ),
-
     (
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Cracks - Annotated/12 - Cracks',
         r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Cracks - Annotated',
         'crack_issues'
+    ),
+    (
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Alligator cracks - Annotated/2 - Alligator Cracks - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Alligator cracks - Annotated',
+        'alligator_crack_issues'
+    ),
+    (
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Ravelling - Annotated/Ravelling - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Ravelling - Annotated',
+        'ravelling'
+    ),
+    (
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Pumping and Depression - Annotated/05-Pumping and Depression - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Pumping and Depression - Annotated',
+        'pumping_and_depression'
+    ),
+    (
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Open Manhole - Annotated/10 - Open Manhole - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Open Manhole - Annotated',
+        'open_manhole'
     )
 ]
 
