@@ -5,11 +5,10 @@ import random
 import albumentations as A
 
 # --- CONFIGURATION ---
-NUM_AUG_PER_IMAGE = 3  # Not used in this script
+NUM_AUG_PER_IMAGE = 3
 TARGET_SIZE = (640, 640)
 SPLIT_RATIOS = {'train': 0.64, 'val': 0.16, 'test': 0.2}
 OUTPUT_ROOT = './Road_Damage'
-ROTATION_SAMPLES = 3
 
 # Dataset configuration: (image_dir, label_dir, class_name)
 DATASETS = [
@@ -98,9 +97,7 @@ for img_dir, lbl_dir, class_name in DATASETS:
             write_yolo_labels(dst_lbl, bboxes, classes)
 
 # --- AUGMENTATION CONFIGURATION ---
-
 def sharpen_image(x, **kwargs):
-    # Apply sharpening using Laplacian
     laplacian = cv2.Laplacian(x, cv2.CV_16S, ksize=3)
     sharp = cv2.addWeighted(x, 0.7, cv2.convertScaleAbs(laplacian), 0.3, 0)
     return sharp
@@ -152,35 +149,15 @@ for _, _, class_name in DATASETS:
         if not bboxes:
             continue
 
-        # Exposure
-        aug = augmentations['exposure'](image=img, bboxes=bboxes, class_labels=classes)
-        cv2.imwrite(os.path.join(img_folder, f"{fname}_exp.jpg"), aug['image'])
-        write_yolo_labels(os.path.join(lbl_folder, f"{fname}_exp.txt"), aug['bboxes'], aug['class_labels'])
+        # Randomly select N augmentations per image
+        aug_keys = list(augmentations.keys())
+        chosen_augs = random.sample(aug_keys, min(NUM_AUG_PER_IMAGE, len(aug_keys)))
 
-        # Rotation variants
-        for i in range(1, ROTATION_SAMPLES + 1):
-            aug = augmentations['rotation'](image=img, bboxes=bboxes, class_labels=classes)
-            cv2.imwrite(os.path.join(img_folder, f"{fname}_rot{i}.jpg"), aug['image'])
-            write_yolo_labels(os.path.join(lbl_folder, f"{fname}_rot{i}.txt"), aug['bboxes'], aug['class_labels'])
-
-        # Scaling
-        aug = augmentations['scaling'](image=img, bboxes=bboxes, class_labels=classes)
-        cv2.imwrite(os.path.join(img_folder, f"{fname}_scale.jpg"), aug['image'])
-        write_yolo_labels(os.path.join(lbl_folder, f"{fname}_scale.txt"), aug['bboxes'], aug['class_labels'])
-
-        # Motion Blur
-        aug = augmentations['motion_blur'](image=img, bboxes=bboxes, class_labels=classes)
-        cv2.imwrite(os.path.join(img_folder, f"{fname}_motion.jpg"), aug['image'])
-        write_yolo_labels(os.path.join(lbl_folder, f"{fname}_motion.txt"), aug['bboxes'], aug['class_labels'])
-
-        # Color
-        aug = augmentations['color'](image=img, bboxes=bboxes, class_labels=classes)
-        cv2.imwrite(os.path.join(img_folder, f"{fname}_color.jpg"), aug['image'])
-        write_yolo_labels(os.path.join(lbl_folder, f"{fname}_color.txt"), aug['bboxes'], aug['class_labels'])
-
-        # Sharpen
-        aug = augmentations['sharpen'](image=img, bboxes=bboxes, class_labels=classes)
-        cv2.imwrite(os.path.join(img_folder, f"{fname}_sharp.jpg"), aug['image'])
-        write_yolo_labels(os.path.join(lbl_folder, f"{fname}_sharp.txt"), aug['bboxes'], aug['class_labels'])
+        for aug_key in chosen_augs:
+            aug = augmentations[aug_key](image=img, bboxes=bboxes, class_labels=classes)
+            aug_img_path = os.path.join(img_folder, f"{fname}_{aug_key}.jpg")
+            aug_lbl_path = os.path.join(lbl_folder, f"{fname}_{aug_key}.txt")
+            cv2.imwrite(aug_img_path, aug['image'])
+            write_yolo_labels(aug_lbl_path, aug['bboxes'], aug['class_labels'])
 
     print(f"{class_name} augmentation complete.")
