@@ -5,7 +5,7 @@ import random
 import albumentations as A
 
 # --- CONFIGURATION ---
-NUM_AUG_PER_IMAGE = 3  # Not used in this script
+
 TARGET_SIZE = (640, 640)
 SPLIT_RATIOS = {'train': 0.64, 'val': 0.16, 'test': 0.2}
 OUTPUT_ROOT = './Road_Damage'

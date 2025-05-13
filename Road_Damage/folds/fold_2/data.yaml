@@ -1,8 +1,0 @@
-names:
-  0: alligator_crack_issues
-  1: crack_issues
-  2: open_manhole
-  3: potholes
-  4: ravelling
-train: C:\Users\jazzb\ImageDetection-Yolov9\fold_2\train
-val: C:\Users\jazzb\ImageDetection-Yolov9\fold_2\val
