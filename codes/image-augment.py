@@ -5,7 +5,7 @@ import random
 import albumentations as A
 
 # --- CONFIGURATION ---
-NUM_AUG_PER_IMAGE = None  # Not used in this script
+NUM_AUG_PER_IMAGE = 3  # Not used in this script
 TARGET_SIZE = (640, 640)
 SPLIT_RATIOS = {'train': 0.64, 'val': 0.16, 'test': 0.2}
 OUTPUT_ROOT = './Road_Damage'
@@ -14,33 +14,28 @@ ROTATION_SAMPLES = 3
 # Dataset configuration: (image_dir, label_dir, class_name)
 DATASETS = [
     (
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Potholes - Annotated/1 - Potholes-20250429T144329Z-001/1 - Potholes',
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Potholes - Annotated',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Potholes - Annotated/1 - Potholes-20250429T144329Z-001/1 - Potholes',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Potholes - Annotated',
         'potholes'
     ),
     (
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Cracks - Annotated/12 - Cracks',
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Cracks - Annotated',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Cracks - Annotated/12 - Cracks',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Cracks - Annotated',
         'crack_issues'
     ),
     (
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Alligator Cracks - Annotated/2 - Alligator Cracks - IMAGES',
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Alligator cracks - Annotated',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Alligator Cracks - Annotated/2 - Alligator Cracks - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Alligator cracks - Annotated',
         'alligator_crack_issues'
     ),
     (
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Ravelling - Annotated/Ravelling - IMAGES',
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Ravelling - Annotated',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Ravelling - Annotated/Ravelling - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Ravelling - Annotated',
         'ravelling'
     ),
     (
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Pumping and Depression - Annotated/05-Pumping and Depression - IMAGES',
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Pumping and Depression - Annotated',
-        'pumping_and_depression'
-    ),
-    (
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Open Manhole - Annotated/10 - Open Manhole - IMAGES',
-        r'C:/Users/jazzb/ImageDetection-Yolov9/annotated/Open Manhole - Annotated',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Open Manhole - Annotated/10 - Open Manhole - IMAGES',
+        r'C:/Users/jazzb/ImageDetection-Yolov11/annotated/Open Manhole - Annotated',
         'open_manhole'
     )
 ]
