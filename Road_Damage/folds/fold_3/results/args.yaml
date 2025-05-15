@@ -4,8 +4,8 @@ model: models\yolo11n-cls.pt
 data: C:\Users\jazzb\ImageDetection-Yolov11\Road_Damage\folds\fold_3
 epochs: 100
 time: null
-patience: 5
-batch: 8
+patience: 15
+batch: 16
 imgsz: 640
 save: true
 save_period: -1
@@ -14,7 +14,7 @@ device: '0'
 workers: 8
 project: C:\Users\jazzb\ImageDetection-Yolov11\Road_Damage\folds\fold_3
 name: results
-exist_ok: true
+exist_ok: false
 pretrained: true
 optimizer: auto
 verbose: true
@@ -25,14 +25,14 @@ rect: false
 cos_lr: false
 close_mosaic: 10
 resume: false
-amp: false
+amp: true
 fraction: 1.0
 profile: false
 freeze: null
 multi_scale: false
 overlap_mask: true
 mask_ratio: 4
-dropout: 0.2
+dropout: 0.0
 val: true
 split: val
 save_json: false
